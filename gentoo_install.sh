@@ -220,8 +220,11 @@ function chroot_emerge_packages() {
 	# start emerge --resume first
 	emerge --resume
 
-	emerge --quiet dev-vcs/git \
-		app-admin/sudo
+	emerge --quiet app-admin/sudo \
+		dev-vcs/git \
+		net-wireless/wireless-regdb \
+		sys-firmware/intel-microcode \
+		sys-kernel/linux-firmware
 }
 
 function chroot_sudoers_patch() {
