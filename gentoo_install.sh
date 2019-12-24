@@ -187,16 +187,13 @@ function chroot_set_use() {
 	echo "# TODO: Add mirrors" >> $CONF_FILE
 	echo "#GENTOO_MIRRORS=\"\"" >> $CONF_FILE
 	echo "VIDEO_CARDS=\"intel i965 nvidia\"" >> $CONF_FILE
-	echo "USE=\"-qt4 -qt5 -kde\"" >> $CONF_FILE
+	echo "USE=\"-gnome\"" >> $CONF_FILE
 }
 
 function chroot_common_prepare() {
 	emerge-webrsync --quiet
 	emerge --sync --quiet
-
-	# Select GNOME as DE
-	eselect profile set default/linux/amd64/17.1/desktop/gnome/systemd
-
+	
 	# https://bugs.gentoo.org/434090
 	# https://bugs.gentoo.org/477240
 	# https://bugs.gentoo.org/477498
@@ -215,6 +212,15 @@ function chroot_common_prepare() {
 
 	# Update the @world set
 	emerge --quiet --update --deep --newuse @world
+}
+
+function chroot_profile_set() {
+	# Select GNOME as DE
+	eselect profile set default/linux/amd64/17.1/desktop/plasma/systemd
+}
+
+function chroot_kde_install() {
+	emerge --quiet kde-plasma/plasma-meta
 }
 
 function chroot_emerge_packages() {
