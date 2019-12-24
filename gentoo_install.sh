@@ -64,16 +64,16 @@ function stage3_download() {
 	latest_stage_name=$(wget --quiet "$MIRROR/releases/amd64/autobuilds/latest-stage3-amd64.txt"  -O- | tail -n 1 | cut -d " " -f 1)
 
 	# Download stage3
-	wget -q --show-progress "$MIRROR/releases/amd64/autobuilds/$latest_stage_name"
-	wget -q --show-progress "$MIRROR/releases/amd64/autobuilds/$latest_stage_name.DIGESTS.asc"
+	wget -q --show-progress "$MIRROR/releases/amd64/autobuilds/$latest_stage_name" -O "$DESTINATION"
+	wget -q --show-progress "$MIRROR/releases/amd64/autobuilds/$latest_stage_name.DIGESTS.asc" -O "$DESTINATION"
 
 	# Verify downloaded stage3
 	# Gentoo Linux Release Engineering (Automated Weekly Release Key)
 	# Created: 2009-08-25
 	# Expiry:  2021-01-01
 	gpg --keyserver hkps://keys.gentoo.org --recv-keys 13EBBDBEDE7A12775DFDB1BABB572E0E2D182910 &> /dev/null
-	gpg --verify "stage3-"*".tar.xz.DIGESTS.asc" &> /dev/null
-	grep $(sha512sum "stage3-"*".tar.xz") "stage3-"*".tar.xz.DIGESTS.asc" &> /dev/null
+	gpg --verify "$DESTINATION/stage3-"*".tar.xz.DIGESTS.asc" &> /dev/null
+	grep $(sha512sum "$DESTINATION/stage3-"*".tar.xz") "$DESTINATION/stage3-"*".tar.xz.DIGESTS.asc" &> /dev/null
 	if [ $? -ne 0 ]; then
 		echo "Failed! Remove downloaded stage3 and exit."
 		stage3_remove
@@ -81,7 +81,7 @@ function stage3_download() {
 	fi
 
 	# Extract downloaded stage3
-	tar xpf "stage3-"*".tar.xz" --xattrs-include='*.*' --numeric-owner
+	tar xpf "$DESTINATION/stage3-"*".tar.xz" --xattrs-include='*.*' --numeric-owner
 	# We don't need stage3 archive anymore. Remove it
 	stage3_remove
 
@@ -89,7 +89,7 @@ function stage3_download() {
 }
 
 function stage3_remove() {
-	rm stage3-*.tar.xz*
+	rm "$DESTINATION"/stage3-*.tar.xz*
 }
 
 function prepare_partitions() {
@@ -215,7 +215,7 @@ function chroot_common_prepare() {
 }
 
 function chroot_profile_set() {
-	# Select GNOME as DE
+	# Select KDE Plasma as DE
 	eselect profile set default/linux/amd64/17.1/desktop/plasma/systemd
 }
 
