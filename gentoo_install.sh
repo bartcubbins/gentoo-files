@@ -21,8 +21,7 @@ function main() {
 	REMAINING_STEPS=$(echo -n "$STEPS" | sed -r -e 's/[^,]+,?(.*?)/\1/')
 	while [ "$CURRENT_STEP" != "" ]; do
 		case "$CURRENT_STEP" in
-			"locale" \
-			| "timezone" \
+			"chroot_common_prepare" \
 			| "set_use")      chroot_handler;;
 			"mount_fs")	  mount_fs;;
 			*)
@@ -191,27 +190,25 @@ function chroot_set_use() {
 }
 
 function chroot_common_prepare() {
-	emerge-webrsync
+	emerge-webrsync --quiet
 	emerge --sync --quiet
+
 	# Select GNOME as DE
 	eselect profile set default/linux/amd64/17.1/desktop/gnome/systemd
-	# Update the @world set
-	emerge --ask --verbose --update --deep --newuse @world
-}
 
-# TODO: Move to common func
-function chroot_timezone() {
+	# Timezone configuration
 	echo "$TIMEZONE" > /etc/timezone
 	emerge --config sys-libs/timezone-data
-}
 
-# TODO: Move to common func
-function chroot_locale() {
+	# Locale configuration
 	echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 	locale-gen
 	eselect locale set en_US.utf8
 	env-update
 	source /etc/profile
+
+	# Update the @world set
+	emerge --quiet --update --deep --newuse @world
 }
 
 function chroot_emerge_packages() {
