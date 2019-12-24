@@ -136,22 +136,45 @@ function chroot_handler() {
 }
 
 function chroot_set_use() {
-	# make.conf file encrypted with base64
-	echo "IyBUaGVzZSBzZXR0aW5ncyB3ZXJlIHNldCBieSB0aGUgY2F0YWx5c3QgYnVpbGQgc2NyaXB0IHRo
-YXQgYXV0b21hdGljYWxseQojIGJ1aWx0IHRoaXMgc3RhZ2UuCiMgUGxlYXNlIGNvbnN1bHQgL3Vz
-ci9zaGFyZS9wb3J0YWdlL2NvbmZpZy9tYWtlLmNvbmYuZXhhbXBsZSBmb3IgYSBtb3JlCiMgZGV0
-YWlsZWQgZXhhbXBsZS4KQ09NTU9OX0ZMQUdTPSItbWFyY2g9c2t5bGFrZSAtTzIgLXBpcGUiCkNG
-TEFHUz0iJHtDT01NT05fRkxBR1N9IgpDWFhGTEFHUz0iJHtDT01NT05fRkxBR1N9IgpGQ0ZMQUdT
-PSIke0NPTU1PTl9GTEFHU30iCkZGTEFHUz0iJHtDT01NT05fRkxBR1N9IgoKIyBOT1RFOiBUaGlz
-IHN0YWdlIHdhcyBidWlsdCB3aXRoIHRoZSBiaW5kaXN0IFVzZSBmbGFnIGVuYWJsZWQKUE9SVERJ
-Uj0iL3Zhci9kYi9yZXBvcy9nZW50b28iCkRJU1RESVI9Ii92YXIvY2FjaGUvZGlzdGZpbGVzIgpQ
-S0dESVI9Ii92YXIvY2FjaGUvYmlucGtncyIKCiMgVGhpcyBzZXRzIHRoZSBsYW5ndWFnZSBvZiBi
-dWlsZCBvdXRwdXQgdG8gRW5nbGlzaC4KIyBQbGVhc2Uga2VlcCB0aGlzIHNldHRpbmcgaW50YWN0
-IHdoZW4gcmVwb3J0aW5nIGJ1Z3MuCkxDX01FU1NBR0VTPUMKCkNQVV9GTEFHU19YODY9ImFlcyBh
-dnggYXZ4MiBmMTZjIGZtYTMgbW14IG1teGV4dCBwY2xtdWwgcG9wY250IHNzZSBzc2UyIHNzZTMg
-c3NlNF8xIHNzZTRfMiBzc3NlMyIKCk1BS0VPUFRTPSItajEyIgoKIyBUT0RPOiBBZGQgbWlycm9y
-cwojR0VOVE9PX01JUlJPUlM9IiIKVklERU9fQ0FSRFM9ImludGVsIGk5NjUgbnZpZGlhIgo=" \
-	| base64 --decode > /etc/portage/make.conf
+	# make.conf path
+	local CONF_FILE=etc/portage/make.conf
+
+	echo "# These settings were set by the catalyst build script that automatically" > $CONF_FILE
+	echo "# built this stage." >> $CONF_FILE
+	echo "# Please consult /usr/share/portage/config/make.conf.example for a more" >> $CONF_FILE
+	echo "# detailed example." >> $CONF_FILE
+	echo "COMMON_FLAGS=\"-march=skylake -O2 -pipe\"" >> $CONF_FILE
+	echo "CFLAGS=\"\${COMMON_FLAGS}\"" >> $CONF_FILE
+	echo "CXXFLAGS=\"\${COMMON_FLAGS}\"" >> $CONF_FILE
+	echo "FCFLAGS=\"\${COMMON_FLAGS}\"" >> $CONF_FILE
+	echo "FFLAGS=\"\${COMMON_FLAGS}\"" >> $CONF_FILE
+
+	echo "" >> $CONF_FILE
+
+	echo "# NOTE: This stage was built with the bindist Use flag enabled" >> $CONF_FILE
+	echo "PORTDIR=\"/var/db/repos/gentoo\"" >> $CONF_FILE
+	echo "DISTDIR=\"/var/cache/distfiles\"" >> $CONF_FILE
+	echo "PKGDIR=\"/var/cache/binpkgs\"" >> $CONF_FILE
+
+	echo "" >> $CONF_FILE
+
+	echo "# This sets the language of build output to English." >> $CONF_FILE
+	echo "# Please keep this setting intact when reporting bugs." >> $CONF_FILE
+	echo "LC_MESSAGES=C" >> $CONF_FILE
+
+	echo "" >> $CONF_FILE
+
+	echo "CPU_FLAGS_X86=\"aes avx avx2 f16c fma3 mmx mmxext pclmul popcnt sse sse2 sse3 sse4_1 sse4_2 ssse3\"" >> $CONF_FILE
+
+	echo "" >> $CONF_FILE
+
+	echo "MAKEOPTS=\"-j12\"" >> $CONF_FILE
+
+	echo "" >> $CONF_FILE
+
+	echo "# TODO: Add mirrors" >> $CONF_FILE
+	echo "#GENTOO_MIRRORS=\"\"" >> $CONF_FILE
+	echo "VIDEO_CARDS=\"intel i965 nvidia\"" >> $CONF_FILE
 }
 
 function chroot_common_prepare() {
