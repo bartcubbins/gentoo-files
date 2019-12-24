@@ -26,7 +26,7 @@
 
 # Variables block
 MIRROR=http://distfiles.gentoo.org
-STEPS="connection_test,prepare_partitions,pre_mount_fs,stage3_download,stage3_remove,mount_fs,chroot_profile_set,chroot_set_use,chroot_common_prepare,chroot_kde_install,chroot_emerge_packages,chroot_sudoers_patch,chroot_kernel_clone,chroot_kernel_build,chroot_user_create"
+STEPS="connection_test,prepare_partitions,pre_mount_fs,network_conf,connection_test,stage3_download,stage3_remove,mount_fs,chroot_profile_set,chroot_set_use,chroot_common_prepare,chroot_kde_install,chroot_emerge_packages,chroot_sudoers_patch,chroot_kernel_clone,chroot_kernel_build,chroot_user_create"
 CHROOT=false
 TIMEZONE="Europe/Kiev"
 DESTINATION=/mnt/gentoo
@@ -53,6 +53,8 @@ function main() {
 			"stage3_download")		stage3_download;;
 			"stage3_remove")		stage3_remove;;
 			"mount_fs")			mount_fs;;
+			"network_conf")			network_conf;;
+			"connection_test")		chroot_handler;;
 			"chroot_profile_set")		chroot_handler;;
 			"chroot_set_use")		chroot_handler;;
 			"chroot_common_prepare")	chroot_handler;;
@@ -79,6 +81,10 @@ function help() {
 	echo
 
 	exit 1
+}
+
+function network_conf() {
+	cp --dereference /etc/resolv.conf "$DESTINATION/etc/"
 }
 
 function connection_test() {
