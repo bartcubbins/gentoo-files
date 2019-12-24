@@ -222,6 +222,11 @@ function chroot_emerge_packages() {
 		app-admin/sudo
 }
 
+function chroot_sudoers_patch() {
+	# DANGEROUS! Allow members of group wheel to
+	# execute any command
+	sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+ALL\)/\1/' /etc/sudoers
+}
 
 # Command line parser
 while [ $# -ne 0 ]; do
