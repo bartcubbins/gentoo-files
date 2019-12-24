@@ -187,6 +187,7 @@ function chroot_set_use() {
 	echo "# TODO: Add mirrors" >> $CONF_FILE
 	echo "#GENTOO_MIRRORS=\"\"" >> $CONF_FILE
 	echo "VIDEO_CARDS=\"intel i965 nvidia\"" >> $CONF_FILE
+	echo "USE=\"-qt4 -qt5 -kde\"" >> $CONF_FILE
 }
 
 function chroot_common_prepare() {
