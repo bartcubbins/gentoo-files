@@ -133,7 +133,7 @@ function stage3_download() {
 }
 
 function stage3_remove() {
-	rm "$DESTINATION"/stage3-*.tar.xz*
+	rm "$DESTINATION"/stage3-*.tar.*
 }
 
 function prepare_partitions() {
