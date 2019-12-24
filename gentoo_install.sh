@@ -212,6 +212,17 @@ function chroot_locale() {
 	source /etc/profile
 }
 
+function chroot_emerge_packages() {
+	# It's possible that this function has already
+	# been executed and ended with an error, let's
+	# start emerge --resume first
+	emerge --resume
+
+	emerge --quiet dev-vcs/git \
+		app-admin/sudo
+}
+
+
 # Command line parser
 while [ $# -ne 0 ]; do
 	case "$1" in
