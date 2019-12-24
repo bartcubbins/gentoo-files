@@ -42,6 +42,19 @@ function help() {
 	exit 1
 }
 
+function connection_test() {
+	echo "Checking internet connection..."
+
+	ping -q -c3 google.com &> /dev/null
+	if [ $? -eq 0 ]; then
+		echo "Сonnection successful."
+	else
+		echo "No internet connection. Exit."
+		exit 1
+	fi
+	
+}
+
 # Download the latest stage3 tarball
 function stage3_download() {
 	echo "Downloading stage 3 archive..."
@@ -153,7 +166,6 @@ function chroot_common_prepare() {
 function chroot_timezone() {
 	echo "$TIMEZONE" > /etc/timezone
 	emerge --config sys-libs/timezone-data
-		
 }
 
 function chroot_locale() {
