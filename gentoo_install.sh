@@ -91,14 +91,25 @@ function stage3_remove() {
 	rm stage3-*.tar.xz*
 }
 
-function prepare_partitions () {
-	echo "Format partitions"
+function prepare_partitions() {
+	echo "Format partitions:"
+	echo ""
 
 	if [ "$SYSTEM_PARTITION" != "" ] && [ "$SYSTEM_FS" != "" ]; then
-		mkfs."$SYSTEM_FS" "$SYSTEM_PARTITION"
+		read -p "Format system partition ("$SYSTEM_PARTITION") using "$SYSTEM_FS" filesystem? [Y/n]: "
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			mkfs."$SYSTEM_FS" "$SYSTEM_PARTITION"
+		else
+			echo "Formatting canceled."
+		fi
 	fi
 	if [ "$BOOT_PARTITION" != "" ] && [ "$BOOT_FS" != "" ]; then
-		mkfs."$BOOT_FS" "$BOOT_PARTITION"
+		read -p "Format boot partition ("$BOOT_PARTITION") using "$BOOT_FS" filesystem? [Y/n]: "
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			mkfs."$BOOT_FS" "$BOOT_PARTITION"
+		else
+			echo "Formatting canceled."
+		fi
 	fi
 	if [ "$SWAP_PARTITION" != "" ]; then
 		mkswap "SWAP_PARTITION"
@@ -186,11 +197,13 @@ function chroot_common_prepare() {
 	emerge --ask --verbose --update --deep --newuse @world
 }
 
+# TODO: Move to common func
 function chroot_timezone() {
 	echo "$TIMEZONE" > /etc/timezone
 	emerge --config sys-libs/timezone-data
 }
 
+# TODO: Move to common func
 function chroot_locale() {
 	echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 	locale-gen
