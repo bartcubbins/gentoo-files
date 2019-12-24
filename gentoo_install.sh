@@ -1,5 +1,29 @@
 #!/bin/bash
 
+#
+# List of functions in order of execution
+#
+# main()
+# help()
+# chroot_handler()
+
+# connection_test()
+# prepare_partitions()
+# pre_mount_fs()
+# stage3_download()
+# stage3_remove()
+# mount_fs()
+# chroot_profile_set()
+# chroot_set_use()
+# chroot_common_prepare()
+# chroot_kde_install()
+# chroot_emerge_packages()
+# chroot_sudoers_patch()
+# chroot_kernel_clone()
+# chroot_kernel_build()
+# chroot_user_create()
+#
+
 # Variables block
 MIRROR=http://distfiles.gentoo.org
 STEPS="locale,timezone,set_use"
