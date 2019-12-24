@@ -108,8 +108,8 @@ function stage3_download() {
 	latest_stage_name=$(wget --quiet "$MIRROR/releases/amd64/autobuilds/latest-stage3-amd64.txt"  -O- | tail -n 1 | cut -d " " -f 1)
 
 	# Download stage3
-	wget -q --show-progress "$MIRROR/releases/amd64/autobuilds/$latest_stage_name" -O "$DESTINATION"
-	wget -q --show-progress "$MIRROR/releases/amd64/autobuilds/$latest_stage_name.DIGESTS.asc" -O "$DESTINATION"
+	wget -q --show-progress "$MIRROR/releases/amd64/autobuilds/$latest_stage_name" -P "$DESTINATION"
+	wget -q --show-progress "$MIRROR/releases/amd64/autobuilds/$latest_stage_name.DIGESTS.asc" -P "$DESTINATION"
 
 	# Verify downloaded stage3
 	# Gentoo Linux Release Engineering (Automated Weekly Release Key)
