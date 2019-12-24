@@ -197,6 +197,11 @@ function chroot_common_prepare() {
 	# Select GNOME as DE
 	eselect profile set default/linux/amd64/17.1/desktop/gnome/systemd
 
+	# https://bugs.gentoo.org/434090
+	# https://bugs.gentoo.org/477240
+	# https://bugs.gentoo.org/477498
+	ln -sf /proc/self/mounts /etc/mtab
+
 	# Timezone configuration
 	echo "$TIMEZONE" > /etc/timezone
 	emerge --config sys-libs/timezone-data
