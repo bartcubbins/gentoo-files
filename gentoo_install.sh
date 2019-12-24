@@ -32,11 +32,13 @@ TIMEZONE="Europe/Kiev"
 DESTINATION=/mnt/gentoo
 KERNEL_SOURCE=https://github.com/bartcubbins/linux.git
 KERNEL_DEFCONFIG=defconfig
-#BOOT_PARTITION=/dev/
-#SYSTEM_PARTITION=/dev/
+BOOT_PARTITION=/dev/nvme0n1p5
+SYSTEM_PARTITION=/dev/nvme0n1p6
+HOME_PARTITION=/dev/sda1
 #SWAP_PARTITION=
-#SYSTEM_FS=f2fs
-#BOOT_FS=fat
+SYSTEM_FS=f2fs
+BOOT_FS=fat
+HOME_FS=ext4
 
 # Main function
 function main() {
@@ -138,6 +140,14 @@ function prepare_partitions() {
 	fi
 	if [ "$SWAP_PARTITION" != "" ]; then
 		mkswap "SWAP_PARTITION"
+	fi
+	if [ "$HOME_PARTITION" != "" ] && [ "$HOME_FS" != "" ]; then
+		read -p "Format home partition ("$HOME_PARTITION") using "$HOME_FS" filesystem? [Y/n]: "
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			mkfs."$HOME_FS" "$HOME_PARTITION"
+		else
+			echo "Formatting canceled."
+		fi
 	fi
 }
 
