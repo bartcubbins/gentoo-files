@@ -26,7 +26,7 @@
 
 # Variables block
 MIRROR=http://distfiles.gentoo.org
-STEPS="locale,timezone,set_use"
+STEPS="connection_test,prepare_partitions,pre_mount_fs,stage3_download,stage3_remove,mount_fs,chroot_profile_set,chroot_set_use,chroot_common_prepare,chroot_kde_install,chroot_emerge_packages,chroot_sudoers_patch,chroot_kernel_clone,chroot_kernel_build,chroot_user_create"
 CHROOT=false
 TIMEZONE="Europe/Kiev"
 DESTINATION=/mnt/gentoo
@@ -47,11 +47,23 @@ function main() {
 	REMAINING_STEPS=$(echo -n "$STEPS" | sed -r -e 's/[^,]+,?(.*?)/\1/')
 	while [ "$CURRENT_STEP" != "" ]; do
 		case "$CURRENT_STEP" in
-			"chroot_common_prepare" \
-			| "set_use")      chroot_handler;;
-			"mount_fs")	  mount_fs;;
+			"connection_test")		connection_test;;
+			"prepare_partitions")		prepare_partitions;;
+			"pre_mount_fs")			pre_mount_fs;;
+			"stage3_download")		stage3_download;;
+			"stage3_remove")		stage3_remove;;
+			"mount_fs")			mount_fs;;
+			"chroot_profile_set")		chroot_handler;;
+			"chroot_set_use")		chroot_handler;;
+			"chroot_common_prepare")	chroot_handler;;
+			"chroot_kde_install")		chroot_handler;;
+			"chroot_emerge_packages")	chroot_handler;;
+			"chroot_sudoers_patch")		chroot_handler;;
+			"chroot_kernel_clone")		chroot_handler;;
+			"chroot_kernel_build")		chroot_handler;;
+			"chroot_user_create")		chroot_handler;;
 			*)
-				echo "error: unknown step: \"$CURRENT_STEP\""
+				echo "Error: Unknown step: \"$CURRENT_STEP\""
 				break
 				;;
 		esac
@@ -173,7 +185,7 @@ function mount_fs() {
 
 function chroot_handler() {
 	if $CHROOT; then
-		chroot_"$CURRENT_STEP"
+		"$CURRENT_STEP"
 		rm /tmp/gentoo_install.sh
 	else
 		cp -f "$0" "$DESTINATION"/tmp
@@ -347,4 +359,4 @@ while [ $# -ne 0 ]; do
 done
 
 # Execute main function
-#main
+main
