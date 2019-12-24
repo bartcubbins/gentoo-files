@@ -7,6 +7,7 @@ CHROOT=false
 TIMEZONE="Europe/Kiev"
 DESTINATION=/mnt/gentoo
 KERNEL_SOURCE=https://github.com/bartcubbins/linux.git
+KERNEL_DEFCONFIG=defconfig
 #BOOT_PARTITION=/dev/
 #SYSTEM_PARTITION=/dev/
 #SWAP_PARTITION=
@@ -231,6 +232,24 @@ function chroot_sudoers_patch() {
 
 function chroot_kernel_clone() {
 	git clone --depth=1 --branch=master "$KERNEL_SOURCE" /usr/src/linux-mainline
+}
+
+function chroot_kernel_build() {
+	eselect kernel set linux-mainline
+
+	# Previous command creates this symlink
+	cd /usr/src/linux
+
+	make "$KERNEL_DEFCONFIG"
+	make -j12
+
+	# Clean boot folder if it's not empty
+	rm -rf /boot/*
+	make install
+	make modules_install
+
+	# Go back to root
+	cd /
 }
 
 # Command line parser
