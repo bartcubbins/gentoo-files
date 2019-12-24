@@ -6,6 +6,7 @@ STEPS="locale,timezone,set_use"
 CHROOT=false
 TIMEZONE="Europe/Kiev"
 DESTINATION=/mnt/gentoo
+KERNEL_SOURCE=https://github.com/bartcubbins/linux.git
 #BOOT_PARTITION=/dev/
 #SYSTEM_PARTITION=/dev/
 #SWAP_PARTITION=
@@ -226,6 +227,10 @@ function chroot_sudoers_patch() {
 	# DANGEROUS! Allow members of group wheel to
 	# execute any command
 	sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+ALL\)/\1/' /etc/sudoers
+}
+
+function chroot_kernel_clone() {
+	git clone --depth=1 --branch=master "$KERNEL_SOURCE" /usr/src/linux-mainline
 }
 
 # Command line parser
