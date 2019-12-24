@@ -252,6 +252,28 @@ function chroot_kernel_build() {
 	cd /
 }
 
+function chroot_user_create() {
+	read -p "Do you want to set a password for the root user? [Y/n]: "
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		passwd root
+	fi
+
+	read -p "Do you want to create a new user? [Y/n]: "
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		while [ -z "$USER_NAME" ]; do
+			read -p "Enter new user name: " USER_NAME
+			if [ -z "$USER_NAME" ]; then
+				echo "User name cannot be empty. Please try again."
+			else
+				# Conver uppercase user name to lowercase
+				USER_NAME=${USER_NAME,,}
+				useradd -m -G users,wheel,audio,portage,usb,video -s /bin/bash "$USER_NAME"
+				passwd "$USER_NAME"
+			fi
+		done
+	fi
+}
+
 # Command line parser
 while [ $# -ne 0 ]; do
 	case "$1" in
